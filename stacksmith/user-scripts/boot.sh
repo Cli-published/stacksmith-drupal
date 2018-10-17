@@ -4,6 +4,9 @@ set -euo pipefail
 
 PHP_PACKAGE=rh-php70
 
+# Drupal commands require HOME to be defined
+export HOME=/root
+
 waitForDatabase() {
     while ! mysql -h $DATABASE_HOST -P $DATABASE_PORT -u $DATABASE_USER -p$DATABASE_PASSWORD -e "SELECT 1;" $DATABASE_NAME >/dev/null 2>&1; do
         echo "==> Waiting for database to become available..."
@@ -41,6 +44,9 @@ main() {
     waitForDatabase
     installDrupal
     flushDrupalCache
+
+    # Fix ownership of files as last step
+    chown -R daemon:daemon $installdir/
 }
 
 main
