@@ -46,7 +46,7 @@ main() {
     flushDrupalCache
 
     # Fix ownership of files as last step
-    chown -R daemon:daemon $installdir/
+    chown -R apache:apache $installdir/
 }
 
 main
