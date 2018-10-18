@@ -1,5 +1,4 @@
 #!/bin/bash
 
-echo "==> Starting Apache..."
-set +u && . /opt/rh/httpd24/enable && set -u
-httpd -DFOREGROUND
+echo "==> Starting Apache"
+scl enable httpd24 'httpd -DFOREGROUND'

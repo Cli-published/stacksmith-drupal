@@ -5,7 +5,7 @@ set -euo pipefail
 PHP_PACKAGE=rh-php70
 
 installDependencies() {
-    echo "==> Installing dependencies..."
+    echo "==> Installing dependencies"
     # Common programs
     yum install -y git wget
     # PHP and extensions, including Apache (note that Drush requires PHP 7.x)
@@ -13,43 +13,48 @@ installDependencies() {
     yum -y install $PHP_PACKAGE $PHP_PACKAGE-php $PHP_PACKAGE-php-mysqlnd $PHP_PACKAGE-php-gd $PHP_PACKAGE-php-xml $PHP_PACKAGE-php-mbstring $PHP_PACKAGE-php-xmlrpc
     # MySQL client
     yum install -y mysql
-    # Load PHP environment to install Composer
-    set +u && . /opt/rh/$PHP_PACKAGE/enable && set -u
     # PHP Composer: https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
-    EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-    ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');")
-    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
-        >&2 echo 'ERROR: Invalid installer signature'
-        rm composer-setup.php
-        exit 1
-    fi
-    php composer-setup.php --quiet
-    rm composer-setup.php
+    echo "==> Installing Composer"
+    cd /tmp
+    wget -q https://getcomposer.org/installer
+    # Create SHA384 checksum file check that composer-setup.php matches
+    wget -q https://composer.github.io/installer.sig
+    sed -i 's/$/  installer/' installer.sig
+    sha384sum -c installer.sig
+    scl enable $PHP_PACKAGE 'php installer --quiet'
     mv composer.phar /usr/bin/composer
 }
 
+configureApache() {
+    HTTPD_ROOT='/opt/rh/httpd24/root'
+    HTTPD_HTML="$HTTPD_ROOT/var/www/html"
+    HTTPD_CONF="$HTTPD_ROOT/etc/httpd/conf/httpd.conf"
+
+    echo "==> Configuring Apache"
+
+    # Enable htaccess for Drupal
+cat >>$HTTPD_CONF <<EOF
+<Directory "$HTTPD_HTML">
+    AllowOverride all
+</Directory>
+EOF
+
+    # Link installdir to the path reserved for Apache htdocs
+    mkdir -p $(dirname $installdir)
+    ln -sfF $HTTPD_HTML $installdir
+}
+
 installDrupal() {
-    # The directory where Drupal is installed
-    readonly installdir='/opt/rh/httpd24/root/var/www/html'
-
-    cd $installdir
-
     echo "==> Installing Drupal"
     test -f $UPLOADS_DIR/drupal*.zip
     unzip -q $UPLOADS_DIR/drupal*.zip -d /tmp
-    cp -R /tmp/drupal-*/. .
-
-    # Make installdir easily accessible by creating a symlink at /var/www/html
-    mkdir /var/www
-    ln -sfF $installdir /var/www/html
+    cp -R /tmp/drupal-*/. $installdir
 }
 
 installDrush() {
     echo "==> Installing Drush"
     # Load PHP environment to install Drush
-    set +u && . /opt/rh/$PHP_PACKAGE/enable && set -u
-    composer require drush/drush
+    scl enable $PHP_PACKAGE "cd $installdir && composer require drush/drush"
 }
 
 installDrushLauncher() {
@@ -60,7 +65,11 @@ installDrushLauncher() {
 }
 
 main() {
+    # The directory where Drupal is installed
+    readonly installdir='/var/www/html'
+
     installDependencies
+    configureApache
     installDrupal
     installDrush
     installDrushLauncher
