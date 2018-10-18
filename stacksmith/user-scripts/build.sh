@@ -46,8 +46,14 @@ EOF
 
 installDrupal() {
     echo "==> Installing Drupal"
-    test -f $UPLOADS_DIR/drupal*.zip
-    unzip -q $UPLOADS_DIR/drupal*.zip -d /tmp
+
+    if [ -f $UPLOADS_DIR/drupal*.zip ]; then
+        unzip -q $UPLOADS_DIR/drupal*.zip -d /tmp
+    elif [ -f $UPLOADS_DIR/drupal*.tar.gz ]; then
+        tar xzf $UPLOADS_DIR/drupal*.tar.gz -C /tmp
+    else
+        echo "You must provide the zip file with Drupal sources!"
+    fi
     cp -R /tmp/drupal-*/. $installdir
 }
 
