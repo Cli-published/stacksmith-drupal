@@ -73,13 +73,15 @@ In the `stacksmith/user-scripts` folder, you can find the required scripts to bu
 
 ### build.sh
 
-This script takes care of installing the application and its dependencies. It performs the next steps:
+This script takes care of configuring the environment for the application to be installed. It performs the following steps:
 
-* Adds the system user that will run the application.
-* Uncompress the application code to the `/opt/app` folder.
-* Adjust the application files permissions.
-* Install dependencies.
+* Install application dependencies such as Apache, PHP and Composer.
+* Uncompress the application code to the `/var/www/html` folder.
 
 ### boot.sh
 
-This script takes care of configuring the application.
+This script takes care of installing the application.
+
+### run.sh
+
+This script starts the Apache server, so that the application can be accessed via HTTP port 80.
