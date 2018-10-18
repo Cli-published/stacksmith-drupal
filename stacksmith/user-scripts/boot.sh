@@ -46,6 +46,13 @@ main() {
     # The directory where WordPress is installed
     readonly installdir='/var/www/html'
 
+    echo "==> Initializing Drupal"
+
+    if [ -f $installdir/sites/default/settings.php ]; then
+        echo "The site is already initialized!"
+        return
+    fi
+
     waitForDatabase
     installDrupal
     flushDrupalCache
