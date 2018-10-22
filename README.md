@@ -7,28 +7,29 @@ This is a simple guide to show how to deploy Drupal using [Bitnami Stacksmith](h
 1. Go to [stacksmith.bitnami.com](https://stacksmith.bitnami.com).
 2. Create a new application and select the `Generic application with DB (MySQL)` stack template.
 3. Select the targets you are interested on (AWS, Kubernetes,...).
-4. Download Drupal manually or with the command below, and upload the `drupal-latest.zip` application file:
+4. Download Drupal manually from https://www.drupal.org/download-latest/zip, or run the command below:
 
    ```bash
    wget -O drupal-latest.zip https://www.drupal.org/download-latest/zip
    ```
 
-5. Select `Git repository` for the application scripts and paste the URL of this repo. Use `master` as the `Repository Reference`.
-6. Click the <kbd>Create</kbd> button.
-7. Wait for app to be built and deploy it in your favorite target platform.
+5. Upload the `drupal-latest.zip` application file (or alternatively `drupal-VERSION.zip`, e.g. `drupal-8.6.2.zip`). Note that you can provide any version of Drupal.
+6. Select `Git repository` for the application scripts and paste the URL of this repo. Use `master` as the `Repository Reference`.
+7. Click the <kbd>Create</kbd> button.
+8. Wait for app to be built and deploy it in your favorite target platform.
 
 Stacksmith will compare the latest commit for a reference (e.g. new commits made to a branch) against the last commit used during packaging. If there are any new commits available, these will be available to view within the `Repository Details` pane in the application history. If you choose to repackage your application, these newer commits will be incorporated and used during the packaging.
 
 ### Update the application with Stacksmith
 
-1. Download a new version of Drupal. You can download the latest available version with the command below:
+1. Download the latest available version of Drupal from https://www.drupal.org/download-latest/zip, or with the command below:
 
    ```bash
    wget -O drupal-latest.zip https://www.drupal.org/download-latest/zip
    ```
 
 2. Go to your app [stacksmith.bitnami.com](https://stacksmith.bitnami.com)
-3. Click on <kbd>Edit configuration</kbd>, delete the existing `drupal-latest.zip` and upload the new `drupal-latest.zip`.
+3. Click on <kbd>Edit configuration</kbd>, delete the existing `drupal-latest.zip` and upload the new `drupal-latest.zip` (or alternatively `drupal-VERSION.zip`, e.g. `drupal-8.6.2.zip`).
 4. Click <kbd>Update</kbd>.
 5. Wait for the new version to be built and re-deploy it in your favorite target platform.
 
@@ -38,7 +39,7 @@ Stacksmith will use the latest Application Scripts from the GitHub repository.
 
 1. Go to [stacksmith.bitnami.com](https://stacksmith.bitnami.com), create a new application and select the `Generic application with DB (MySQL)` stack template.
 2. Install [Stacksmith CLI](https://github.com/bitnami/stacksmith-cli) and authenticate with Stacksmith.
-3. Download the latest version of Drupal:
+3. Download the latest version of Drupal from https://www.drupal.org/download-latest/zip, or with the command below:
 
    ```bash
    wget -O drupal-latest.zip https://www.drupal.org/download-latest/zip
@@ -53,7 +54,7 @@ Stacksmith will use the latest Application Scripts from the GitHub repository.
 
 ### Update the application via CLI
 
-1. Download the latest version of Drupal:
+1. Download the latest version of Drupal from https://www.drupal.org/download-latest/zip, or with the command below:
 
    ```bash
    wget -O drupal-latest.zip https://www.drupal.org/download-latest/zip
