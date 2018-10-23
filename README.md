@@ -1,3 +1,5 @@
+[![View in Stacksmith](https://img.shields.io/badge/view_in-stacksmith-00437B.svg)](https://stacksmith.bitnami.com/p/bitnami-public/apps/99c19450-b505-0136-6be5-226052b6e44c)
+
 # Drupal
 
 This is a simple guide to show how to deploy Drupal using [Bitnami Stacksmith](https://stacksmith.bitnami.com)
